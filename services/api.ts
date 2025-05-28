@@ -14,22 +14,17 @@ export const fetchMovies = async ({
 }): Promise<Movie[]> => {
   const endpoint = query
     ? `${TMDB_CONFIG.BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-    : `${TMDB_CONFIG.BASE_URL}/discover/movie`;
+    : `${TMDB_CONFIG.BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
-  try {
-    const response = await fetch(endpoint, {
-      method: "GET",
-      headers: TMDB_CONFIG.headers,
-    });
+  const response = await fetch(endpoint, {
+    method: "GET",
+    headers: TMDB_CONFIG.headers,
+  });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch movies: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.results;
-  } catch (error) {
-    console.log("Fehler beim Fetch: ", error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`Failed to fetch movies: ${response.statusText}`);
   }
+
+  const data = await response.json();
+  return data.results;
 };
